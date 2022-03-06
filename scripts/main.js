@@ -1,5 +1,6 @@
 
 
+
 const keyApi = "5c5308034d77a39e46ac52d2d8b185e1";
 let resultatsApi;
 const temps = document.querySelector('.temps')
@@ -7,6 +8,28 @@ const temperature = document.querySelector('.temperature')
 const localisation = document.querySelector('.localisation')
 const heure = document.querySelectorAll('.heure-nom-prevision')
 const tempsPourH = document.querySelectorAll('.heure-prevision-valeur')
+const joursDiv = document.querySelectorAll('.jour-prevision-nom')
+const tempjoursDiv = document.querySelectorAll('.jour-prevision-temps')
+const imgIcone = document.querySelector('.logo-meteo')
+// const chargementContainer = document.querySelector('.overlay-icone-chargement')
+
+
+//gestion du temps
+
+const jourSemaine = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
+
+let Auj = new Date();
+let options = {weekday: 'long'}
+
+let today = Auj.toLocaleDateString('fr-FR', options);
+
+
+today = today.charAt(0).toUpperCase() + today.slice(1)
+
+const tabjour = jourSemaine.slice(jourSemaine.indexOf(today,)).concat(jourSemaine.slice(0, jourSemaine.indexOf(today)));
+
+
+//-------------------------
 
 
 if(navigator.geolocation){
@@ -50,5 +73,21 @@ function AppelApi(long, lat){
         for(let j=0; j<tempsPourH.length; j++){
             tempsPourH[j].innerHTML = `${Math.trunc(resultatsApi.hourly[j *3].temp)} °`
         }
+        for(let k=0; k<tabjour.length; k++){
+            joursDiv[k].innerHTML = tabjour[k].slice(0,3)
+        }
+
+        for(let m=0; m<7; m++){
+            tempjoursDiv[m].innerHTML = `${Math.trunc(resultatsApi.daily[m + 1].temp.day)} °`
+        }
+
+        if(heureActuelle>=6 && heureActuelle<21){
+            imgIcone.src =`ressources/jour/${resultatsApi.current.weather[0].icon}.svg`
+        }else{
+            imgIcone.src =`ressources/nuit/${resultatsApi.current.weather[0].icon}.svg`
+
+        }
+
+        // chargementContainer.classList.add('disparition')
     })
 }
